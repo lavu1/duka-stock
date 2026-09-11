@@ -6,7 +6,7 @@
 
 **Intended challenge:** [Build, Ship, Shape: Amazon Developer Hackathon](https://amazonappdev2026.devpost.com/), Alexa+ track.
 
-**Status:** Draft only. Public repository and judge setup links are entered in Devpost. The public video, personal eligibility declarations, and final terms remain incomplete.
+**Status:** Devpost shows 4/5 steps complete. The public video, source repository, judging guide, three captioned screenshots, demo/subtitle ZIP, judging answers, and eligibility declarations are saved. Final submission awaits the rules-and-terms agreement.
 
 ## Inspiration
 
@@ -56,10 +56,10 @@ Test with a shopkeeper, measure corrections and completion time, improve aliases
 
 TypeScript, React, Vinext, Cloudflare Workers, D1, Drizzle, MCP, Web Speech API, Tailwind CSS, shadcn, Lucide.
 
-## Links to add
+## Submission links
 
 - Public GitHub repository with license: https://github.com/lavu1/duka-stock.
-- Public English video under three minutes: **pending; script prepared**.
+- Public English video: https://youtu.be/4JPdPXOuqHA (2:06, English captions, actual app walkthrough with synthetic narration).
 - Judge testing: [reproducible local setup](https://github.com/lavu1/duka-stock/blob/main/docs/judging.md). The hosted development preview is private.
 - Optional friction evidence: https://github.com/lavu1/duka-stock/blob/main/submission/friction-log.md.
 

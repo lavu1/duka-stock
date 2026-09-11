@@ -13,7 +13,7 @@ The [official rules](https://amazonappdev2026.devpost.com/rules) allow the simul
 
 ## Highest-value remaining work
 
-1. Record the real working flow from the demo script, including refresh-before-confirm and an impossible sale. Publish an English video below three minutes.
+1. Review the [published 2:06 English demo](https://youtu.be/4JPdPXOuqHA), including refresh-before-confirm and an impossible sale. The video and captions are complete and linked in Devpost.
 2. Ask a willing shopkeeper to perform a sale, delivery, correction, and reorder with sample data. Record actual corrections and completion time, and compare with their usual method. Do not invent a speedup or endorsement.
 3. Use the findings to make one targeted improvement. Local product aliases or catalog editing may be more valuable than adding an unrelated AI feature.
 4. Your public portfolio shows Bemba/NLP expertise. A future tested Bemba workflow could be distinctive, but the present entry supports English only. Do not claim Bemba support before implementation and native-speaker evaluation.

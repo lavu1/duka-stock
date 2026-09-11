@@ -41,4 +41,4 @@ The last command creates its own disposable database and Worker, runs the HTTP s
 
 See [MCP protocol usage](mcp.md), [architecture](architecture.md), and [validation limitations](validation.md). Hosted owner-private development previews are not required to reproduce the project; use this repository for judge testing.
 
-The final public video is still pending and must be added to Devpost before submission.
+Watch the [public English demo on YouTube](https://youtu.be/4JPdPXOuqHA) (2:06, with English captions). It shows the actual application using typed input and fictional shop data; the narration is synthetic. Microphone recognition and a live Echo connection are not demonstrated. The same link is saved in the Devpost entry.

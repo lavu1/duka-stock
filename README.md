@@ -2,7 +2,7 @@
 
 [![Verify Duka](https://github.com/lavu1/duka-stock/actions/workflows/verify.yml/badge.svg)](https://github.com/lavu1/duka-stock/actions/workflows/verify.yml)
 
-[Judge testing guide](docs/judging.md) · [MCP integration](docs/mcp.md) · [MIT license](LICENSE)
+[Watch the 2:06 demo](https://youtu.be/4JPdPXOuqHA) · [Judge testing guide](docs/judging.md) · [MCP integration](docs/mcp.md) · [MIT license](LICENSE)
 
 A working voice-and-text stock assistant for a small shop. Record sales and deliveries, check low stock, and prepare reorder drafts. Every stock change requires explicit review. Products, suppliers, and prices are fictional sample data for a Lusaka corner shop.
 
@@ -64,6 +64,7 @@ For HTTP/database checks, follow [the isolated test setup](docs/validation.md). 
 - Reviews expire after ten minutes. Conflicting updates require a fresh review. Replaying a successful confirmation cannot deduct stock twice.
 - Orders are unsent drafts; no payments or supplier messages are made.
 - Hosted access uses Sites account authentication. Tool responses provide a refresh-safe review link. An external Alexa client still needs supported authentication.
-- No merchant trial, microphone/device compatibility study, public video, or final Devpost submission is claimed complete.
+- The public English demo shows typed input with fictional shop data and synthetic narration. Merchant trials and microphone/device compatibility studies remain future work.
+- Final Devpost submission awaits the rules-and-terms agreement.
 
 Project code is MIT licensed. Bundled dependencies retain their licenses; see [third-party notices](THIRD_PARTY_NOTICES.md).
