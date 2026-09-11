@@ -6,7 +6,7 @@
 
 **Intended challenge:** [Build, Ship, Shape: Amazon Developer Hackathon](https://amazonappdev2026.devpost.com/), Alexa+ track.
 
-**Status:** Draft only. An existing Devpost draft is available; final submission is incomplete. Add the final public repository, video, and judge-accessible demo before submitting.
+**Status:** Draft only. Public repository and judge setup links are entered in Devpost. The public video, personal eligibility declarations, and final terms remain incomplete.
 
 ## Inspiration
 
@@ -28,6 +28,8 @@ The current language layer is a deterministic parser with aliases and spoken-num
 
 Reviews capture a shop revision. An atomic database batch prevents a stale review overwriting newer stock and prevents a repeated confirmation deducting twice. Shop identity scopes all inventory and exports.
 
+MCP tool responses include an authenticated review link. Opening that link or refreshing the browser restores the same pending plan, without confirming it or granting access to another shop.
+
 ## Challenges
 
 Voice needs a visible correction point. Duka separates transcript, quantity review, and confirmation. Unknown products and impossible sales produce an error instead of a guessed change.
@@ -39,7 +41,7 @@ Tool preparation is not a saved sale. The interface distinguishes pending review
 - A working inventory workflow with durable storage.
 - Compound updates and clear quantity review.
 - A real MCP boundary without a stock-confirmation tool.
-- Passing domain and HTTP/database checks, including concurrent edits and repeated confirmation.
+- 12 passing domain tests and 24 HTTP/database checks, including concurrent edits, repeated confirmation, review recovery, and shop isolation.
 - A concrete sample shop requiring no purchased hardware.
 
 ## What we learned
@@ -56,9 +58,9 @@ TypeScript, React, Vinext, Cloudflare Workers, D1, Drizzle, MCP, Web Speech API,
 
 ## Links to add
 
-- Public GitHub repository with license: **pending**.
+- Public GitHub repository with license: https://github.com/lavu1/duka-stock.
 - Public English video under three minutes: **pending; script prepared**.
-- Judge-accessible demo: **initial hosted preview is private**.
-- Optional friction evidence: **only actual documented experience**.
+- Judge testing: [reproducible local setup](https://github.com/lavu1/duka-stock/blob/main/docs/judging.md). The hosted development preview is private.
+- Optional friction evidence: https://github.com/lavu1/duka-stock/blob/main/submission/friction-log.md.
 
 The [challenge resources](https://amazonappdev2026.devpost.com/resources) describe simulated web experiences for Alexa+. Recheck current rules and the submission form; this draft does not establish eligibility or guarantee acceptance.

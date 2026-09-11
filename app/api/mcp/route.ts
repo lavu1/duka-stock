@@ -147,9 +147,16 @@ export async function POST(request: Request) {
                 shop,
                 name === "prepare_reorder" ? "Prepare a reorder" : args.command,
               );
+      const output =
+        "reviewPath" in result && typeof result.reviewPath === "string"
+          ? {
+              ...result,
+              reviewUrl: new URL(result.reviewPath, request.url).href,
+            }
+          : result;
       return response({
-        content: [{ type: "text", text: JSON.stringify(result) }],
-        structuredContent: result,
+        content: [{ type: "text", text: JSON.stringify(output) }],
+        structuredContent: output,
         isError: false,
       });
     } catch (e) {
@@ -167,7 +174,13 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   try {
     shopIdentity(request);
-    return new Response(null, { status: 405, headers: { Allow: "POST" } });
+    return Response.json(
+      {
+        error:
+          "This MCP endpoint accepts POST requests; SSE streaming is not available.",
+      },
+      { status: 405, headers: { Allow: "POST", "Cache-Control": "no-store" } },
+    );
   } catch (e) {
     return failure(e);
   }

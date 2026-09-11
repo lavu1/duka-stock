@@ -1609,3 +1609,66 @@ input {
 .inventory-table {
   min-width: 360px;
 }
+
+/* Keep the primary input visible before responses, including on compact screens. */
+.command-form {
+  margin-top: 16px;
+}
+.command-form input {
+  font-size: 1rem;
+}
+.voice-note {
+  color: #506965;
+}
+@media (max-width: 900px) {
+  .assistant-welcome {
+    display: grid;
+    grid-template-columns: 62px 1fr;
+    column-gap: 16px;
+    text-align: left;
+    padding: 12px 20px;
+  }
+  .voice-orbit {
+    width: 62px;
+    height: 62px;
+    margin: 0;
+    grid-row: 1 / 3;
+  }
+  .mic-button {
+    width: 48px;
+    height: 48px;
+  }
+  .assistant-welcome h2 {
+    margin: 3px 0 4px;
+    font-size: 1.25rem;
+    align-self: end;
+  }
+  .assistant-welcome p {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #506965;
+  }
+  .assistant-body {
+    max-height: 520px;
+    overflow-y: auto;
+  }
+  .command-form {
+    margin-top: 12px;
+  }
+}
+@media (max-width: 600px) {
+  .workspace {
+    padding-top: 20px;
+  }
+  .page-intro {
+    margin-bottom: 20px;
+  }
+  .assistant-welcome {
+    padding: 10px 16px;
+    gap: 12px;
+  }
+  .assistant-welcome h2 {
+    font-size: 1.125rem;
+  }
+}

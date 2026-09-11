@@ -1,4 +1,11 @@
-import { bodyOf, failure, json, resolvePlan, shopIdentity } from "@/lib/server";
+import {
+  bodyOf,
+  failure,
+  json,
+  resolvePlan,
+  readReview,
+  shopIdentity,
+} from "@/lib/server";
 import { StockError } from "@/lib/stock";
 export async function POST(request: Request) {
   try {
@@ -11,5 +18,16 @@ export async function POST(request: Request) {
     return json(await resolvePlan(shop, body.id, body.action));
   } catch (e) {
     return failure(e);
+  }
+}
+
+export async function GET(request: Request) {
+  try {
+    const shop = shopIdentity(request);
+    return json({
+      plan: await readReview(shop, new URL(request.url).searchParams.get("id")),
+    });
+  } catch (error) {
+    return failure(error);
   }
 }

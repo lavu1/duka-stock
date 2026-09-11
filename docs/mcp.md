@@ -33,7 +33,7 @@ curl http://localhost:5173/api/mcp \
   --data '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"preview_stock_change","arguments":{"command":"Sold 3 milk"}}}'
 ```
 
-A separate client only prepares a plan. That plan does not automatically appear in the browser's in-memory review. Use the app to create and confirm a review; cross-device handoff is future work.
+A tool response includes `reviewUrl`. Open it in the same authenticated shop to recover and confirm that exact plan. Refreshing keeps the review. The URL does not grant access to other shops. Cancelled, applied, expired, and stale plans cannot be reopened as pending. External Alexa+ authentication remains future work.
 
 ## Draft instructions for a future Alexa+ connection
 

@@ -38,6 +38,10 @@ A future model should call these same narrow tools rather than write SQL or bypa
 
 1. Test microphone behavior and product pronunciation with a willing shopkeeper.
 2. Add catalog editing and aliases based on observed needs.
-3. Implement supported external MCP authentication and review handoff, then test an Alexa+ client.
+3. Implement supported external MCP authentication, then test the existing review-link handoff with an Alexa+ client.
 4. Evaluate any broader language layer on consented, de-identified commands.
 5. Add expired-plan retention and merchant backup/export before production use.
+
+## Review links
+
+MCP previews return an absolute review URL. The browser keeps the opaque plan ID in its URL and retrieves the persisted plan after refresh. The read endpoint checks the authenticated shop, pending status, expiry, and current revision. The URL is an identifier, not a bearer credential. Confirmation remains a separate user action.

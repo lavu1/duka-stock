@@ -170,6 +170,7 @@ export async function preview(shop: string, command: string) {
     .run();
   return {
     kind: "plan",
+    reviewPath: `/?review=${plan.id}`,
     message:
       intent.kind === "reorder"
         ? "Review the quantities below. This saves a draft; it does not contact or pay a supplier."
@@ -177,6 +178,50 @@ export async function preview(shop: string, command: string) {
     plan,
   };
 }
+// Recover exactly one review by its opaque ID; the URL is not an authorization token.
+export async function readReview(
+  shop: string,
+  id: string | null,
+): Promise<Plan> {
+  if (!id || !/^[a-f0-9-]{36}$/i.test(id))
+    throw new StockError("Invalid review link.", 400);
+  const row = await database()
+    .prepare(
+      "SELECT p.body,p.status,p.expires_at,p.revision,s.revision AS current_revision FROM plans p JOIN shops s ON s.id=p.shop_id WHERE p.id=? AND p.shop_id=?",
+    )
+    .bind(id, shop)
+    .first<{
+      body: string;
+      status: string;
+      expires_at: number;
+      revision: number;
+      current_revision: number;
+    }>();
+  if (!row)
+    throw new StockError("This review could not be found in your shop.", 404);
+  if (row.status === "applied")
+    throw new StockError(
+      "This review was already saved. Your stock has not changed again.",
+      409,
+    );
+  if (row.status !== "pending")
+    throw new StockError(
+      "This review was cancelled. Ask Duka for a new review.",
+      409,
+    );
+  if (row.expires_at < Date.now())
+    throw new StockError(
+      "This review expired. Ask Duka for current quantities.",
+      409,
+    );
+  if (row.revision !== row.current_revision)
+    throw new StockError(
+      "Stock changed after this review was prepared. Ask Duka for a fresh review.",
+      409,
+    );
+  return JSON.parse(row.body) as Plan;
+}
+
 export async function resolvePlan(
   shop: string,
   id: string,

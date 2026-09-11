@@ -190,6 +190,12 @@ async function callTool<T>(
   if (data.result.isError) throw new Error(data.result.content[0].text);
   return data.result.structuredContent;
 }
+function keepReviewAddress(id?: string) {
+  const url = new URL(window.location.href);
+  if (id) url.searchParams.set("review", id);
+  else url.searchParams.delete("review");
+  window.history.replaceState(window.history.state, "", url);
+}
 function dateTime(value: number) {
   return new Intl.DateTimeFormat("en-ZM", {
     dateStyle: "medium",
@@ -230,6 +236,15 @@ export default function Shop() {
   const input = useRef<HTMLInputElement>(null);
   const assistant = useRef<HTMLElement>(null);
   const recognition = useRef<Recognition | null>(null);
+  const reviewPanel = useRef<HTMLDivElement>(null);
+  const hadPendingReview = useRef(false);
+  const pendingReviewId = answer?.plan?.id;
+  useEffect(() => {
+    if (busy) return;
+    if (pendingReviewId) reviewPanel.current?.focus();
+    else if (hadPendingReview.current) input.current?.focus();
+    hadPendingReview.current = Boolean(pendingReviewId);
+  }, [pendingReviewId, busy]);
   const busyRef = useRef(false);
   const load = useCallback(async () => {
     try {
@@ -241,11 +256,30 @@ export default function Shop() {
   }, []);
   useEffect(() => {
     let active = true;
-    void request<Snapshot>("/api/stock").then(
-      (data) => {
-        if (active) {
-          setState(data);
-          setLoadError("");
+    const reviewId = new URLSearchParams(window.location.search).get("review");
+    const restored = reviewId
+      ? request<{ plan: Plan }>(
+          `/api/review?id=${encodeURIComponent(reviewId)}`,
+        )
+          .then((value) => ({ plan: value.plan, error: "" }))
+          .catch((e) => ({ plan: null, error: (e as Error).message }))
+      : Promise.resolve({ plan: null, error: "" });
+    void Promise.all([request<Snapshot>("/api/stock"), restored]).then(
+      ([data, review]) => {
+        if (!active) return;
+        setState(data);
+        setLoadError("");
+        if (review.plan) {
+          setLastCommand(review.plan.transcript);
+          setAnswer({
+            kind: "plan",
+            message:
+              "Your review is ready. Check the quantities before confirming.",
+            plan: review.plan,
+          });
+        } else if (review.error) {
+          setError(review.error);
+          keepReviewAddress();
         }
       },
       (e) => {
@@ -280,6 +314,7 @@ export default function Shop() {
         tool === "prepare_reorder" ? {} : { command: text },
       );
       setAnswer(result);
+      keepReviewAddress(result.plan?.id);
       setTrace({ tool, ms: Math.round(performance.now() - started) });
       setCommand("");
     } catch (e) {
@@ -306,6 +341,7 @@ export default function Shop() {
       );
       setState(result.state);
       setAnswer({ kind: "answer", message: result.message });
+      keepReviewAddress();
       toast.success(result.message);
     } catch (e) {
       setError((e as Error).message);
@@ -412,6 +448,7 @@ export default function Shop() {
             variant="ghost"
             onClick={() => setHelp(true)}
             className="help-button"
+            aria-label="Demo guide"
           >
             <BookOpen size={17} />
             <span>Demo guide</span>
@@ -771,11 +808,44 @@ export default function Shop() {
                   : "Speak or type. Review the details. Back to your customers."}
               </p>
             </div>
+            <form
+              className="command-form"
+              onSubmit={(e) => {
+                e.preventDefault();
+                void ask();
+              }}
+            >
+              <label className="sr-only" htmlFor="shop-command">
+                Your stock update
+              </label>
+              <Input
+                id="shop-command"
+                ref={input}
+                value={command}
+                onChange={(e) => setCommand(e.target.value)}
+                maxLength={500}
+                placeholder="e.g. “Sold 3 milk”"
+                disabled={busy || pending || !state}
+              />
+              <Button
+                type="submit"
+                size="icon"
+                aria-label="Review stock update"
+                disabled={busy || pending || !state || !command.trim()}
+              >
+                <Send size={17} />
+              </Button>
+            </form>
+            <p className="voice-note">
+              Voice uses your browser’s speech service.
+              <br />
+              Always check the transcript before sending.
+            </p>
             <div className="assistant-body">
               {voiceHelp && (
                 <div className="helper-note">
                   Your browser does not support voice input. Type an update
-                  below; it follows the same review process.
+                  above; it follows the same review process.
                 </div>
               )}
               {!answer && !error && !busy && (
@@ -841,7 +911,12 @@ export default function Shop() {
                     </ul>
                   )}
                   {answer.plan && (
-                    <div className="review-card">
+                    <div
+                      className="review-card"
+                      ref={reviewPanel}
+                      tabIndex={-1}
+                      aria-label="Review proposed stock changes"
+                    >
                       <div className="review-heading">
                         <ShieldCheck size={16} />
                         <strong>YOUR REVIEW</strong>
@@ -920,7 +995,7 @@ export default function Shop() {
                         </Button>
                       </div>
                       <p className="review-expiry">
-                        Review expires in 10 minutes.
+                        Review expires: {dateTime(answer.plan.expiresAt)}
                       </p>
                     </div>
                   )}
@@ -949,39 +1024,6 @@ export default function Shop() {
                 </details>
               )}
             </div>
-            <form
-              className="command-form"
-              onSubmit={(e) => {
-                e.preventDefault();
-                void ask();
-              }}
-            >
-              <label className="sr-only" htmlFor="shop-command">
-                Your stock update
-              </label>
-              <Input
-                id="shop-command"
-                ref={input}
-                value={command}
-                onChange={(e) => setCommand(e.target.value)}
-                maxLength={500}
-                placeholder="e.g. “Sold 3 milk”"
-                disabled={busy || pending || !state}
-              />
-              <Button
-                type="submit"
-                size="icon"
-                aria-label="Review stock update"
-                disabled={busy || pending || !state || !command.trim()}
-              >
-                <Send size={17} />
-              </Button>
-            </form>
-            <p className="voice-note">
-              Voice uses your browser’s speech service.
-              <br />
-              Always check the transcript before sending.
-            </p>
           </aside>
         </div>
         <footer className="page-footer">

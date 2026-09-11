@@ -8,17 +8,21 @@
 - [x] Durable schema and generated migration.
 - [x] Domain and HTTP/database checks.
 - [x] MIT license and third-party notices.
-- [x] Devpost text, timed demo script, and honest friction-log starter.
+- [x] Devpost text, timed demo script, and three observed friction reports.
+- [x] Profile details checked: Lavu Mweemba, Zambia, GitHub lavu1; saved as an individual entry.
+- [x] Browser checks for mobile/desktop layout, compound sale, and review recovery after refresh.
+- [x] Reproducible judge setup and automatic isolated integration harness.
 
 ## Remaining
 
 - [ ] Verify the registration and eligibility details already associated with the existing Amazon draft. Final submission is not complete.
 - [x] Name and pitch saved to the existing Amazon Devpost project draft.
-- [ ] Test microphone, mobile layout, keyboard navigation, and the recording flow.
+- [ ] Test actual microphone accuracy and the recording flow; complete a broader keyboard/accessibility check.
 - [ ] Ask a willing shopkeeper to try sample tasks and document actual findings.
 - [ ] Fix observed issues, then record and publish the English video under three minutes.
-- [ ] Publish final source to a public GitHub repository with license and setup instructions.
-- [ ] Provide judge access. The first Sites deployment is an owner-private development preview.
+- [x] Public source repository with MIT license and setup instructions: https://github.com/lavu1/duka-stock.
+- [x] Prepare judge access through a reproducible local setup; the hosted app is an owner-private development preview.
+- [ ] Confirm the required personal eligibility declarations and accept final terms.
 - [ ] Add final links and reviewed text to Devpost; verify current rules and submit before the deadline.
 
 ## Work order

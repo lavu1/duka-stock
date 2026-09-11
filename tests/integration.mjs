@@ -15,6 +15,7 @@ async function http(path, method = "GET", body, extra = {}) {
   const response = await fetch(base + path, {
     method,
     headers: { ...headers, ...extra },
+    signal: AbortSignal.timeout(60000),
     body: body === undefined ? undefined : JSON.stringify(body),
   });
   const data =
@@ -86,7 +87,30 @@ let state = (await http("/api/stock")).data;
 assert.equal(state.products.length, 10);
 assert.equal(state.revision, 0);
 passed("new shop sample inventory");
-const first = await plan("Sold 3 milk and 2 bread");
+const firstResult = await tool("preview_stock_change", {
+  command: "Sold 3 milk and 2 bread",
+});
+const first = firstResult.structuredContent.plan;
+assert.equal(
+  firstResult.structuredContent.reviewUrl,
+  `${base}/?review=${first.id}`,
+);
+passed("tool provides a review handoff URL");
+const recovered = await http(`/api/review?id=${first.id}`);
+assert.equal(recovered.status, 200);
+assert.deepEqual(recovered.data.plan.changes, first.changes);
+passed("pending review can be recovered after refresh");
+assert.equal(
+  (
+    await http(`/api/review?id=${first.id}`, "GET", undefined, {
+      "oai-authenticated-user-id": `foreign-${shop}`,
+    })
+  ).status,
+  404,
+);
+passed("review links do not grant access to another shop");
+assert.equal((await http("/api/review?id=invalid")).status, 400);
+passed("malformed review links are rejected");
 assert.equal((await http("/api/stock")).data.products[0].quantity, 8);
 passed("preview has no stock side effects");
 let saved = await review(first.id);
@@ -99,6 +123,8 @@ saved = await review(first.id);
 assert.equal(saved.data.state.products[0].quantity, 5);
 assert.equal(saved.data.state.activity.length, 1);
 passed("confirmation replay is idempotent");
+assert.equal((await http(`/api/review?id=${first.id}`)).status, 409);
+passed("applied reviews cannot be reopened as pending");
 const cancelled = await plan("Received 10 milk");
 await review(cancelled.id, "cancel");
 assert.equal((await review(cancelled.id)).status, 409);
@@ -109,6 +135,8 @@ await review(fresh.id);
 assert.equal((await review(stale.id)).status, 409);
 assert.equal((await http("/api/stock")).data.products[0].quantity, 5);
 passed("stale plan rejected without partial writes");
+assert.equal((await http(`/api/review?id=${stale.id}`)).status, 409);
+passed("stale review links require a fresh plan");
 const [raceA, raceB] = await Promise.all([
   plan("Received 1 water"),
   plan("Received 2 tea"),

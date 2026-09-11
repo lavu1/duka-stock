@@ -14,7 +14,8 @@
     "db:generate": "drizzle-kit generate",
     "test": "node --test tests/stock.test.mjs",
     "typecheck": "tsc --noEmit",
-    "test:integration": "node tests/integration.mjs"
+    "test:integration": "node tests/integration.mjs",
+    "test:integration:isolated": "node scripts/test-integration.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
